@@ -1,0 +1,981 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>For Priti | Happy New Year 2026</title>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- GSAP for Pro Animations -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+    
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Montserrat:wght@300;400;600&family=Playfair+Display:ital,wght@1,400;1,700&family=Orbitron:wght@400;700&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --primary: #ec4899;
+            --secondary: #8b5cf6;
+            --scanner-color: #22d3ee; /* Cyan for tech feel */
+        }
+        
+        body {
+            background-color: #020617;
+            color: white;
+            font-family: 'Montserrat', sans-serif;
+            overflow-x: hidden;
+            cursor: none; /* Custom cursor */
+            user-select: none; /* Prevent text selection during hold */
+        }
+
+        /* Custom Cursor */
+        #cursor-dot, #cursor-outline {
+            position: fixed;
+            top: 0;
+            left: 0;
+            transform: translate(-50%, -50%);
+            border-radius: 50%;
+            z-index: 9999;
+            pointer-events: none;
+            mix-blend-mode: difference;
+        }
+        #cursor-dot {
+            width: 8px;
+            height: 8px;
+            background-color: white;
+        }
+        #cursor-outline {
+            width: 40px;
+            height: 40px;
+            border: 1px solid rgba(255, 255, 255, 0.5);
+            transition: width 0.2s, height 0.2s;
+        }
+
+        /* Typography */
+        .font-script { font-family: 'Dancing Script', cursive; }
+        .font-serif { font-family: 'Playfair Display', serif; }
+        .font-tech { font-family: 'Orbitron', sans-serif; }
+
+        /* Glassmorphism */
+        .glass-panel {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Envelope 3D */
+        .envelope-wrapper {
+            perspective: 1000px;
+            cursor: pointer;
+        }
+        .envelope {
+            transform-style: preserve-3d;
+            position: relative;
+        }
+        
+        /* The Flap */
+        #flap {
+            transform-origin: top;
+            z-index: 20;
+        }
+
+        /* Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #0f172a; 
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #334155; 
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #475569; 
+        }
+
+        /* Gradient Text */
+        .text-gradient {
+            background: linear-gradient(to right, #f472b6, #c084fc, #f472b6);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-size: 200% auto;
+            animation: gradientMove 3s linear infinite;
+        }
+
+        @keyframes gradientMove {
+            0% { background-position: 0% 50%; }
+            100% { background-position: 200% 50%; }
+        }
+        
+        /* Mobile touch target fix */
+        .touch-target {
+            min-width: 44px;
+            min-height: 44px;
+        }
+
+        /* Timer Box */
+        .timer-box {
+            background: rgba(0,0,0,0.3);
+            border: 1px solid rgba(255,255,255,0.1);
+            backdrop-filter: blur(4px);
+        }
+
+        /* --- SCANNER STYLES --- */
+        .scanner-container {
+            position: relative;
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            border: 2px solid rgba(255, 255, 255, 0.1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+        
+        .scanner-container:active, .scanner-container.active {
+            transform: scale(0.95);
+            border-color: var(--scanner-color);
+            box-shadow: 0 0 20px var(--scanner-color);
+        }
+
+        .fingerprint {
+            width: 80px;
+            height: 80px;
+            fill: rgba(255, 255, 255, 0.3);
+            transition: fill 0.3s;
+        }
+
+        .scanner-container.active .fingerprint {
+            fill: rgba(34, 211, 238, 0.8); /* Cyan glow */
+        }
+        
+        .scanner-container.success .fingerprint {
+            fill: #4ade80; /* Green success */
+        }
+
+        .scan-beam {
+            position: absolute;
+            top: -100%;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: var(--scanner-color);
+            box-shadow: 0 0 15px var(--scanner-color);
+            opacity: 0;
+        }
+
+        .scanner-container.active .scan-beam {
+            opacity: 1;
+            animation: scan 1.5s linear infinite;
+        }
+
+        @keyframes scan {
+            0% { top: -10%; }
+            100% { top: 110%; }
+        }
+
+        .certificate {
+            background: linear-gradient(135deg, #fff1eb 0%, #ace0f9 100%);
+            color: #1e293b;
+        }
+
+        /* Warp Button */
+        .warp-btn {
+            background: linear-gradient(45deg, #ec4899, #8b5cf6);
+            background-size: 200% 200%;
+            animation: gradientMove 2s ease infinite;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Custom Cursor (Hidden on touch devices via JS usually, but kept for effect) -->
+    <div id="cursor-dot" class="hidden md:block"></div>
+    <div id="cursor-outline" class="hidden md:block"></div>
+
+    <!-- Background Canvas for Starfield -->
+    <canvas id="bgCanvas" class="fixed inset-0 z-0"></canvas>
+
+    <!-- Loading / Intro Screen -->
+    <div id="intro-layer" class="fixed inset-0 z-50 flex flex-col items-center justify-center bg-black transition-colors duration-1000">
+        
+        <div class="envelope-wrapper relative group" id="envelope-trigger">
+            <div class="envelope w-80 h-52 bg-red-700 shadow-2xl rounded-b-xl flex items-center justify-center relative z-10">
+                <!-- Flap -->
+                <div id="flap" class="absolute top-0 left-0 w-full h-0 border-l-[160px] border-l-transparent border-r-[160px] border-r-transparent border-t-[110px] border-t-red-600"></div>
+                
+                <!-- Seal -->
+                <div id="seal" class="absolute top-[40px] z-30 bg-yellow-500 w-12 h-12 rounded-full flex items-center justify-center shadow-lg text-red-800 font-bold text-xl border-2 border-yellow-300 pointer-events-none">
+                    P
+                </div>
+
+                <!-- Letter Preview (Hidden inside initially) -->
+                <div id="letter-preview" class="absolute w-[90%] h-[90%] bg-white bottom-0 rounded-sm z-0 transform translate-y-2 shadow-sm"></div>
+            </div>
+            
+            <!-- Glow effect behind envelope -->
+            <div class="absolute inset-0 bg-red-500 blur-[50px] opacity-20 group-hover:opacity-40 transition-opacity duration-500 -z-10"></div>
+        </div>
+
+        <div class="mt-12 text-center space-y-4 relative z-20">
+            <p class="text-red-100/60 text-sm tracking-[0.3em] font-light uppercase animate-pulse">A Gift for You</p>
+            <!-- Explicit Button for better hit testing -->
+            <button id="open-btn" class="px-8 py-3 bg-white/10 hover:bg-white/20 border border-white/20 rounded-full text-white text-sm tracking-widest transition-all hover:scale-105 touch-target backdrop-blur-sm">
+                OPEN ENVELOPE
+            </button>
+        </div>
+    </div>
+
+    <!-- Main Application Container -->
+    <main id="app-content" class="relative z-10 opacity-0 hidden">
+        
+        <!-- Navigation -->
+        <nav class="fixed top-0 w-full p-6 flex justify-between items-center z-40 mix-blend-difference">
+            <div class="text-white font-bold tracking-widest text-sm">PRITI ❤️ ME</div>
+            <div class="flex gap-4 items-center">
+                <button id="music-toggle" class="text-xs uppercase tracking-widest hover:text-pink-400 transition-colors flex items-center gap-2">
+                    <span>❤️</span> <span>2026</span>
+                </button>
+            </div>
+        </nav>
+
+        <!-- Section 1: Hero -->
+        <section class="min-h-screen flex flex-col items-center justify-center text-center px-4 relative overflow-hidden">
+            <h2 class="text-pink-400 tracking-[0.5em] text-xs md:text-sm uppercase mb-4 reveal-text">The Wait Is Over</h2>
+            <h1 class="text-6xl md:text-9xl font-serif text-white mb-2 reveal-text overflow-hidden leading-tight">
+                <span class="inline-block transform translate-y-full">Happy</span><br class="md:hidden" />
+                <span class="inline-block transform translate-y-full text-transparent bg-clip-text bg-gradient-to-r from-pink-500 to-purple-500">New Year</span>
+            </h1>
+            <div class="text-8xl md:text-[12rem] font-bold text-white/5 font-serif absolute select-none -z-10 parallax-bg">
+                2026
+            </div>
+            
+            <div class="mt-12 relative group cursor-default">
+                <div class="absolute -inset-1 bg-gradient-to-r from-pink-600 to-purple-600 rounded-lg blur opacity-75 group-hover:opacity-100 transition duration-1000 group-hover:duration-200 animate-pulse"></div>
+                <div class="relative px-12 py-6 bg-black rounded-lg leading-none flex items-center justify-center">
+                    <span class="text-gray-400 text-xs md:text-sm mr-4 tracking-widest">WISHING You</span>
+                    <span class="text-4xl md:text-6xl font-script text-white">Priti</span>
+                </div>
+            </div>
+
+            <!-- GALACTIC ALIGNMENT BUTTON -->
+            <button id="align-stars-btn" class="mt-8 px-6 py-2 rounded-full border border-pink-500/50 text-pink-300 text-xs tracking-widest hover:bg-pink-500/20 transition-all">
+                ✧ ALIGN THE STARS ✧
+            </button>
+
+            <div class="absolute bottom-10 animate-bounce">
+                <p class="text-[10px] tracking-widest uppercase opacity-50">Scroll to Explore</p>
+            </div>
+        </section>
+
+        <!-- Section 2: The Eternal Clock -->
+        <section class="min-h-[50vh] flex flex-col items-center justify-center px-4 py-20 relative">
+            <div class="text-center mb-10">
+                <h2 class="text-2xl md:text-4xl font-serif mb-2 text-white">Every Second With You</h2>
+                <p class="text-xs tracking-[0.3em] text-pink-400 uppercase">Is A Moment I Cherish</p>
+            </div>
+
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-4 w-full max-w-4xl">
+                <div class="timer-box p-6 rounded-lg text-center">
+                    <span id="t-days" class="block text-4xl md:text-6xl font-bold text-pink-500 font-mono">0</span>
+                    <span class="text-xs uppercase tracking-widest text-gray-400">Days</span>
+                </div>
+                <div class="timer-box p-6 rounded-lg text-center">
+                    <span id="t-hours" class="block text-4xl md:text-6xl font-bold text-purple-500 font-mono">0</span>
+                    <span class="text-xs uppercase tracking-widest text-gray-400">Hours</span>
+                </div>
+                <div class="timer-box p-6 rounded-lg text-center">
+                    <span id="t-minutes" class="block text-4xl md:text-6xl font-bold text-pink-500 font-mono">0</span>
+                    <span class="text-xs uppercase tracking-widest text-gray-400">Minutes</span>
+                </div>
+                <div class="timer-box p-6 rounded-lg text-center">
+                    <span id="t-seconds" class="block text-4xl md:text-6xl font-bold text-purple-500 font-mono">0</span>
+                    <span class="text-xs uppercase tracking-widest text-gray-400">Seconds</span>
+                </div>
+            </div>
+            <p class="mt-8 text-gray-500 text-xs italic">...since our journey began.</p>
+        </section>
+
+        <!-- Section 3: The Message -->
+        <section class="min-h-screen flex items-center justify-center px-4 py-20 relative">
+            <div class="glass-panel max-w-2xl p-8 md:p-16 rounded-3xl transform rotate-1 hover:rotate-0 transition-transform duration-500">
+                <div class="absolute -top-6 -left-6 md:-top-10 md:-left-10 text-8xl md:text-9xl text-pink-500/20 font-serif">"</div>
+                <p class="text-lg md:text-3xl font-serif leading-relaxed text-center text-gray-100 gs-reveal">
+                    As the calendar turns to 2026, I don't just wish for happiness. I wish for <span class="text-pink-400 italic">us</span>. More laughter, more quiet moments, and more of that beautiful smile that lights up my world.
+                </p>
+                <div class="mt-8 text-center">
+                    <p class="font-script text-2xl md:text-3xl text-purple-400 gs-reveal">You are my favorite chapter.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section 4: The Timeline -->
+        <section class="min-h-screen py-20 px-4 max-w-4xl mx-auto">
+            <h2 class="text-3xl md:text-4xl font-serif text-center mb-20 text-gradient">Our Journey to 2026</h2>
+            
+            <div class="relative border-l-2 border-pink-500/30 ml-4 md:ml-0 space-y-20">
+                <!-- Timeline Item 1 -->
+                <div class="relative pl-12 md:pl-24 timeline-item">
+                    <div class="absolute left-[-9px] top-0 w-5 h-5 rounded-full bg-pink-500 shadow-[0_0_20px_rgba(236,72,153,0.8)]"></div>
+                    <span class="text-pink-400 font-mono text-sm mb-2 block">THE PAST</span>
+                    <h3 class="text-2xl md:text-3xl font-bold mb-4">How it Started</h3>
+                    <p class="text-gray-400 leading-relaxed max-w-lg">
+                        Looking back at all the memories we've built. Every small moment led us to this point. I wouldn't trade a single second.
+                    </p>
+                </div>
+
+                <!-- Timeline Item 2 -->
+                <div class="relative pl-12 md:pl-24 timeline-item">
+                    <div class="absolute left-[-9px] top-0 w-5 h-5 rounded-full bg-purple-500 shadow-[0_0_20px_rgba(168,85,247,0.8)]"></div>
+                    <span class="text-purple-400 font-mono text-sm mb-2 block">THE PRESENT</span>
+                    <h3 class="text-2xl md:text-3xl font-bold mb-4">Right Here, Right Now</h3>
+                    <p class="text-gray-400 leading-relaxed max-w-lg">
+                        Celebrating you. Not just for the New Year, but for who you are today. Amazing, kind, and mine.
+                    </p>
+                </div>
+
+                <!-- Timeline Item 3 -->
+                <div class="relative pl-12 md:pl-24 timeline-item">
+                    <div class="absolute left-[-9px] top-0 w-5 h-5 rounded-full bg-white shadow-[0_0_20px_rgba(255,255,255,0.8)]"></div>
+                    <span class="text-white font-mono text-sm mb-2 block">THE FUTURE</span>
+                    <h3 class="text-2xl md:text-3xl font-bold mb-4">2026 & Beyond</h3>
+                    <p class="text-gray-400 leading-relaxed max-w-lg">
+                        Unwritten pages waiting for our stories. Let's make this year our masterpiece.
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section 5: AI Cupid (Updated with 6 options and better formatting) -->
+        <section class="min-h-screen flex flex-col items-center justify-center px-4 py-20 relative overflow-hidden">
+            <!-- Decorative Elements -->
+            <div class="absolute top-0 right-0 w-96 h-96 bg-purple-600/20 rounded-full blur-[100px]"></div>
+            <div class="absolute bottom-0 left-0 w-96 h-96 bg-pink-600/20 rounded-full blur-[100px]"></div>
+
+            <div class="glass-panel p-8 rounded-3xl w-full max-w-2xl relative z-10 border-t border-white/20">
+                <div class="text-center mb-8">
+                    <span class="inline-block py-1 px-3 rounded-full bg-pink-500/20 text-pink-300 text-xs font-bold tracking-wider mb-4 border border-pink-500/30">POWERED BY YOUR LOVE</span>
+                    <h2 class="text-3xl md:text-4xl font-serif mb-2">Cupid's Intelligent Ink</h2>
+                    <p class="text-gray-400 text-sm">Select a mood below to reveal your destiny:</p>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+                    <button class="ai-trigger p-4 rounded-xl bg-white/5 hover:bg-white/10 border border-white/5 transition-all text-left group" data-mood="Romantic Poem">
+                        <span class="text-2xl mb-2 block group-hover:scale-110 transition-transform">🌹</span>
+                        <h4 class="font-bold text-sm">Romantic Poem</h4>
+                        <p class="text-xs text-gray-500 mt-1">Sweet & Rhyming</p>
+                    </button>
+                    <button class="ai-trigger p-4 rounded-xl bg-white/5 hover:bg-white/10 border border-white/5 transition-all text-left group" data-mood="Future Letter">
+                        <span class="text-2xl mb-2 block group-hover:scale-110 transition-transform">🚀</span>
+                        <h4 class="font-bold text-sm">Letter from 2027</h4>
+                        <p class="text-xs text-gray-500 mt-1">A wish from the future</p>
+                    </button>
+                    <button class="ai-trigger p-4 rounded-xl bg-white/5 hover:bg-white/10 border border-white/5 transition-all text-left group" data-mood="Funny Resolution">
+                        <span class="text-2xl mb-2 block group-hover:scale-110 transition-transform">🤪</span>
+                        <h4 class="font-bold text-sm">Funny Resolution</h4>
+                        <p class="text-xs text-gray-500 mt-1">A cute & funny promise</p>
+                    </button>
+                    <button class="ai-trigger p-4 rounded-xl bg-white/5 hover:bg-white/10 border border-white/5 transition-all text-left group" data-mood="Cosmic Compliment">
+                        <span class="text-2xl mb-2 block group-hover:scale-110 transition-transform">✨</span>
+                        <h4 class="font-bold text-sm">Cosmic Compliment</h4>
+                        <p class="text-xs text-gray-500 mt-1">Deep space romance</p>
+                    </button>
+                    <!-- NEW FEATURES -->
+                    <button class="ai-trigger p-4 rounded-xl bg-white/5 hover:bg-white/10 border border-white/5 transition-all text-left group" data-mood="Love Forecast">
+                        <span class="text-2xl mb-2 block group-hover:scale-110 transition-transform">🔮</span>
+                        <h4 class="font-bold text-sm">Love Forecast 2026</h4>
+                        <p class="text-xs text-gray-500 mt-1">Our destiny revealed</p>
+                    </button>
+                    <button class="ai-trigger p-4 rounded-xl bg-white/5 hover:bg-white/10 border border-white/5 transition-all text-left group" data-mood="Emoji Message">
+                        <span class="text-2xl mb-2 block group-hover:scale-110 transition-transform">💌</span>
+                        <h4 class="font-bold text-sm">Emoji Love Letter</h4>
+                        <p class="text-xs text-gray-500 mt-1">Decode the message</p>
+                    </button>
+                </div>
+
+                <div id="ai-output" class="hidden min-h-[120px] p-6 bg-black/40 rounded-xl border border-white/5 font-serif italic text-lg text-center text-pink-100/90 leading-loose whitespace-pre-wrap">
+                    <!-- Text generates here -->
+                </div>
+                
+                <div id="ai-loader" class="hidden flex justify-center py-8">
+                    <div class="flex space-x-2">
+                        <div class="w-2 h-2 bg-pink-500 rounded-full animate-bounce"></div>
+                        <div class="w-2 h-2 bg-pink-500 rounded-full animate-bounce delay-75"></div>
+                        <div class="w-2 h-2 bg-pink-500 rounded-full animate-bounce delay-150"></div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section 6: Biometric Soulmate Scanner -->
+        <section class="py-24 flex flex-col items-center justify-center relative min-h-[70vh]">
+            <h3 class="text-xl font-tech tracking-widest mb-10 text-cyan-300/80 uppercase">Identity Verification Required</h3>
+            
+            <div id="scanner-wrapper" class="glass-panel p-10 rounded-3xl flex flex-col items-center gap-8 border border-cyan-500/20 shadow-[0_0_50px_rgba(34,211,238,0.1)] relative overflow-hidden transition-all duration-500 max-w-lg w-full">
+                
+                <!-- Status Text -->
+                <div class="text-center h-8">
+                    <p id="scan-status" class="font-mono text-sm text-cyan-400 animate-pulse">PLACE THUMB TO SCAN</p>
+                </div>
+
+                <!-- Scanner Button -->
+                <div id="scanner-btn" class="scanner-container group">
+                    <!-- SVG Fingerprint -->
+                    <svg class="fingerprint" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M12,2A10,10 0 0,0 2,12A10,10 0 0,0 12,22A10,10 0 0,0 22,12A10,10 0 0,0 12,2M12,4A8,8 0 0,1 20,12A8,8 0 0,1 12,20A8,8 0 0,1 4,12A8,8 0 0,1 12,4M12,6A6,6 0 0,0 6,12A6,6 0 0,0 12,18A6,6 0 0,0 18,12A6,6 0 0,0 12,6M12,8A4,4 0 0,1 16,12A4,4 0 0,1 12,16A4,4 0 0,1 8,12A4,4 0 0,1 12,8Z"/>
+                        <path d="M12 5.5C14.5 5.5 16.5 6.5 17.5 8M6.5 8C7.5 6.5 9.5 5.5 12 5.5M12 7.5C10.5 7.5 9 8.5 9 10.5C9 12.5 10.5 13.5 11 13.5C11 13.5 11 15.5 12 16.5C13 15.5 13 13.5 13 13.5C13.5 13.5 15 12.5 15 10.5C15 8.5 13.5 7.5 12 7.5" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" />
+                    </svg>
+                    <!-- Scanning Beam -->
+                    <div class="scan-beam"></div>
+                </div>
+
+                <p class="text-xs text-gray-500 uppercase tracking-widest mt-2">Hold to Verify Identity</p>
+
+                <!-- Hidden Certificate -->
+                <div id="certificate-container" class="hidden absolute inset-0 z-20 flex items-center justify-center p-4">
+                    <div class="certificate w-full h-full rounded-2xl p-1 border-4 border-yellow-400/50 shadow-2xl transform scale-90 opacity-0 transition-all duration-1000 flex items-center justify-center text-center flex-col relative overflow-hidden">
+                        <!-- Holographic Shine -->
+                        <div class="absolute inset-0 bg-gradient-to-tr from-transparent via-white/40 to-transparent w-[200%] h-[200%] -translate-x-full animate-[shine_3s_infinite]"></div>
+                        
+                        <div class="relative z-10 border-2 border-dashed border-gray-400/30 p-6 w-full h-full flex flex-col justify-center items-center rounded-xl bg-white/50 backdrop-blur-sm">
+                            <div class="text-4xl mb-4">👑</div>
+                            <h2 class="font-serif text-2xl md:text-3xl text-gray-800 mb-2 font-bold">Official Certificate</h2>
+                            <div class="h-px w-20 bg-gray-400 mb-6"></div>
+                            
+                            <p class="text-xs font-bold text-gray-500 uppercase tracking-widest mb-1">Identity Verified</p>
+                            <h3 class="text-3xl md:text-5xl font-script text-pink-600 mb-4 drop-shadow-sm">Priti</h3>
+                            
+                            <p class="font-serif text-gray-600 italic text-sm md:text-base leading-relaxed mb-6">
+                                "This document certifies that you are officially recognized as the 
+                                <span class="font-bold text-gray-900">Love of My Life</span> 
+                                and my eternal Soulmate."
+                            </p>
+                            
+                            <div class="flex justify-between w-full px-8 mt-4 pt-4 border-t border-gray-300">
+                                <div class="text-left">
+                                    <p class="text-[10px] uppercase text-gray-400">Date</p>
+                                    <p class="font-serif text-sm">Jan 1, 2026</p>
+                                </div>
+                                <div class="text-right">
+                                    <p class="text-[10px] uppercase text-gray-400">Signed</p>
+                                    <p class="font-script text-lg text-gray-800">Your Love</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- Section 7: Warp Speed -->
+        <section class="py-24 flex flex-col items-center justify-center relative min-h-[50vh]">
+            <h3 class="text-xl font-serif mb-6 text-gray-400">Ready for our Future?</h3>
+            <div id="warp-container" class="glass-panel p-8 rounded-2xl flex flex-col items-center gap-6 border border-red-500/50 bg-red-500/5 max-w-lg w-full shadow-[0_0_40px_rgba(239,68,68,0.2)]">
+                <p class="text-sm text-center text-gray-300">Buckle up. We are jumping into 2026.</p>
+                <button id="warp-btn" class="warp-btn px-10 py-4 rounded-full text-white font-bold tracking-widest shadow-[0_0_20px_rgba(236,72,153,0.5)] transform hover:scale-105 transition-all border border-white/20">
+                    🚀 JUMP TO LIGHTSPEED
+                </button>
+                
+                <div id="warp-message" class="hidden text-center opacity-0 transform translate-y-4">
+                    <div class="text-6xl mb-4 animate-pulse drop-shadow-[0_0_10px_rgba(255,0,0,0.8)]">❤️</div>
+                    <h4 class="text-2xl font-serif text-white mb-2">My Destination</h4>
+                    <p class="font-serif text-lg italic text-pink-200 leading-relaxed">"No matter how fast time moves or where the galaxy takes us, my destination is always <span class="text-white font-bold">You</span>. I love you, Priti."</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Footer -->
+        <footer class="py-12 text-center text-white/30 text-xs tracking-widest uppercase">
+            Made with ❤️ for Priti • 2026
+        </footer>
+    </main>
+
+    <!-- Music (Hidden Player - Requires user interaction to play) -->
+    <audio id="bg-music" loop>
+        <source src="https://ia800504.us.archive.org/11/items/GymnopedieNo1/GymnopedieNo1.mp3" type="audio/mpeg">
+        <source src="https://upload.wikimedia.org/wikipedia/commons/e/e4/Gymnopedie_No_1.ogg" type="audio/ogg">
+    </audio>
+
+    <script>
+        window.addEventListener('load', () => {
+            // --- 1. SETUP & UTILS ---
+            gsap.registerPlugin(ScrollTrigger);
+            const apiKey = "AIzaSyCVg3h2xrIsBaZG9BOuwf_KcdBlOgmtbUA"; // Runtime key
+
+            // --- 2. MUSIC PLAYER ---
+            const musicBtn = document.getElementById('music-toggle');
+            const audio = document.getElementById('bg-music');
+            let isPlaying = false;
+
+            musicBtn.addEventListener('click', () => {
+                if(!isPlaying) {
+                    audio.play().catch(e => console.log("Audio play failed", e));
+                    musicBtn.innerHTML = '<span class="text-pink-400">||</span> <span class="text-pink-400">Pause Music</span>';
+                    isPlaying = true;
+                } else {
+                    audio.pause();
+                    musicBtn.innerHTML = '<span>♫</span> <span>Play Music</span>';
+                    isPlaying = false;
+                }
+            });
+
+            // --- 3. CURSOR LOGIC ---
+            const cursorDot = document.getElementById("cursor-dot");
+            const cursorOutline = document.getElementById("cursor-outline");
+
+            // Only enable custom cursor on non-touch devices
+            if (window.matchMedia("(pointer: fine)").matches) {
+                window.addEventListener("mousemove", (e) => {
+                    const posX = e.clientX;
+                    const posY = e.clientY;
+
+                    cursorDot.style.left = `${posX}px`;
+                    cursorDot.style.top = `${posY}px`;
+
+                    cursorOutline.animate({
+                        left: `${posX}px`,
+                        top: `${posY}px`
+                    }, { duration: 500, fill: "forwards" });
+                });
+            }
+
+            // --- 4. CANVAS STARFIELD (Unified: Heart + Warp) ---
+            const canvas = document.getElementById('bgCanvas');
+            const ctx = canvas.getContext('2d');
+            let width, height;
+            let stars = [];
+            let isFormingHeart = false;
+            let heartPoints = [];
+            let warpSpeed = 0; // 0 = normal, > 0 = warp
+            
+            // Warp Colors
+            const warpColors = ["#ec4899", "#8b5cf6", "#06b6d4", "#f59e0b", "#ffffff"];
+            
+            function initCanvas() {
+                width = window.innerWidth;
+                height = window.innerHeight;
+                canvas.width = width;
+                canvas.height = height;
+                
+                // Initialize Stars with 3D props for warp
+                stars = [];
+                for(let i = 0; i < 400; i++) {
+                    stars.push({
+                        x: Math.random() * width,
+                        y: Math.random() * height,
+                        z: Math.random() * width, // For 3D warp
+                        originX: Math.random() * width,
+                        originY: Math.random() * height,
+                        targetX: null,
+                        targetY: null,
+                        radius: Math.random() * 1.5,
+                        alpha: Math.random(),
+                        speed: Math.random() * 0.3,
+                        color: warpColors[Math.floor(Math.random() * warpColors.length)]
+                    });
+                }
+                
+                // Pre-calculate Heart Points (Parametric Equation)
+                heartPoints = [];
+                const scale = Math.min(width, height) / 40; 
+                const centerX = width / 2;
+                const centerY = height / 2.5;
+                
+                for(let i=0; i < 400; i++) {
+                    const t = (i / 400) * Math.PI * 2;
+                    const x = 16 * Math.pow(Math.sin(t), 3);
+                    const y = 13 * Math.cos(t) - 5 * Math.cos(2*t) - 2 * Math.cos(3*t) - Math.cos(4*t);
+                    heartPoints.push({
+                        x: centerX + (x * scale),
+                        y: centerY - (y * scale) 
+                    });
+                }
+            }
+
+            const alignStarsBtn = document.getElementById('align-stars-btn');
+            
+            function toggleHeartMode(forceState = null) {
+                if (forceState !== null) isFormingHeart = forceState;
+                else isFormingHeart = !isFormingHeart;
+                
+                if(isFormingHeart) {
+                    alignStarsBtn.innerText = "✨ RELEASE STARS ✨";
+                    alignStarsBtn.classList.add('bg-pink-500/20');
+                    stars.forEach((star, i) => {
+                        const point = heartPoints[i % heartPoints.length];
+                        star.targetX = point.x;
+                        star.targetY = point.y;
+                    });
+                } else {
+                    alignStarsBtn.innerText = "✧ ALIGN THE STARS ✧";
+                    alignStarsBtn.classList.remove('bg-pink-500/20');
+                    stars.forEach(star => {
+                        star.targetX = null;
+                        star.targetY = null;
+                    });
+                }
+            }
+            
+            alignStarsBtn.addEventListener('click', () => toggleHeartMode());
+
+            function animateStars() {
+                // Determine background clear/fill based on mode
+                ctx.fillStyle = warpSpeed > 0 ? "rgba(0, 0, 0, 0.2)" : "black"; 
+                if (warpSpeed === 0) ctx.clearRect(0, 0, width, height);
+                else ctx.fillRect(0, 0, width, height); // Trail effect
+                
+                const cx = width / 2;
+                const cy = height / 2;
+
+                stars.forEach(star => {
+                    ctx.fillStyle = "white";
+                    
+                    if (warpSpeed > 0) {
+                        // --- WARP MODE (DEEP & COLORFUL) ---
+                        star.z -= warpSpeed;
+                        if (star.z <= 0) {
+                            star.z = width;
+                            star.x = Math.random() * width;
+                            star.y = Math.random() * height;
+                        }
+                        
+                        const sx = (star.x - cx) * (width / star.z) + cx;
+                        const sy = (star.y - cy) * (width / star.z) + cy;
+                        const radius = (1 - star.z / width) * 4; 
+                        
+                        // Draw Prismatic Streak
+                        ctx.beginPath();
+                        ctx.moveTo(sx, sy);
+                        
+                        const prevZ = star.z + warpSpeed * 2;
+                        const px = (star.x - cx) * (width / prevZ) + cx;
+                        const py = (star.y - cy) * (width / prevZ) + cy;
+                        
+                        ctx.lineTo(px, py);
+                        
+                        // Use Star Color for Streak
+                        ctx.strokeStyle = star.color;
+                        ctx.globalAlpha = 1 - star.z/width;
+                        ctx.lineWidth = radius;
+                        ctx.stroke();
+                        ctx.globalAlpha = 1;
+
+                    } else if (isFormingHeart && star.targetX !== null) {
+                        // --- HEART MODE ---
+                        star.x += (star.targetX - star.x) * 0.05;
+                        star.y += (star.targetY - star.y) * 0.05;
+                        ctx.fillStyle = "#ec4899"; 
+                        
+                        // Twinkle
+                        star.alpha += (Math.random() - 0.5) * 0.05;
+                        if(star.alpha < 0.1) star.alpha = 0.1;
+                        if(star.alpha > 1) star.alpha = 1;
+
+                        ctx.globalAlpha = star.alpha;
+                        ctx.beginPath();
+                        ctx.arc(star.x, star.y, star.radius, 0, Math.PI * 2);
+                        ctx.fill();
+
+                    } else {
+                        // --- NORMAL MODE ---
+                        star.y -= star.speed;
+                        if(star.y < 0) {
+                            star.y = height;
+                            star.x = Math.random() * width;
+                        }
+
+                        // Twinkle
+                        star.alpha += (Math.random() - 0.5) * 0.05;
+                        if(star.alpha < 0.1) star.alpha = 0.1;
+                        if(star.alpha > 1) star.alpha = 1;
+
+                        ctx.globalAlpha = star.alpha;
+                        ctx.beginPath();
+                        ctx.arc(star.x, star.y, star.radius, 0, Math.PI * 2);
+                        ctx.fill();
+                    }
+                });
+                
+                requestAnimationFrame(animateStars);
+            }
+
+            window.addEventListener('resize', initCanvas);
+            initCanvas();
+            animateStars();
+
+
+            // --- 5. ETERNAL CLOCK LOGIC ---
+            const startDate = new Date("2021-09-06T16:00:00"); 
+
+            function updateTimer() {
+                const now = new Date();
+                const diff = now - startDate;
+
+                const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+                const hours = Math.floor((diff / (1000 * 60 * 60)) % 24);
+                const minutes = Math.floor((diff / 1000 / 60) % 60);
+                const seconds = Math.floor((diff / 1000) % 60);
+
+                document.getElementById('t-days').innerText = days;
+                document.getElementById('t-hours').innerText = hours;
+                document.getElementById('t-minutes').innerText = minutes;
+                document.getElementById('t-seconds').innerText = seconds;
+            }
+            setInterval(updateTimer, 1000);
+            updateTimer();
+
+
+            // --- 6. BIOMETRIC SCANNER LOGIC ---
+            const scannerBtn = document.getElementById('scanner-btn');
+            const scanStatus = document.getElementById('scan-status');
+            const certContainer = document.getElementById('certificate-container');
+            const cert = certContainer.querySelector('.certificate');
+            
+            let holdTimer;
+            let isHeld = false;
+            let isDone = false;
+            const SCAN_TIME = 2500; // 2.5 seconds to scan
+
+            const startScan = (e) => {
+                if(isDone) return;
+                e.preventDefault(); // prevent touch scroll
+                isHeld = true;
+                scannerBtn.classList.add('active');
+                
+                // Scanning Progress Simulation
+                let progress = 0;
+                scanStatus.innerText = "INITIALIZING...";
+                scanStatus.style.color = "#22d3ee"; // Cyan
+                
+                let scanInterval = setInterval(() => {
+                    if(!isHeld || isDone) {
+                        clearInterval(scanInterval);
+                        return;
+                    }
+                    progress += 10;
+                    if(progress < 30) scanStatus.innerText = "ANALYZING DNA...";
+                    else if(progress < 60) scanStatus.innerText = "SEARCHING DATABASE...";
+                    else if(progress < 90) scanStatus.innerText = "MATCHING BIOMETRICS...";
+                }, SCAN_TIME / 10);
+
+                // Hold Timer
+                holdTimer = setTimeout(() => {
+                    isDone = true;
+                    scannerBtn.classList.remove('active');
+                    scannerBtn.classList.add('success');
+                    clearInterval(scanInterval);
+                    
+                    // Success State
+                    scanStatus.innerText = "IDENTITY CONFIRMED: LOVE OF MY LIFE";
+                    scanStatus.style.color = "#4ade80"; // Green
+                    scanStatus.classList.remove('animate-pulse');
+                    scanStatus.classList.add('font-bold');
+
+                    // Reveal Certificate
+                    setTimeout(() => {
+                        certContainer.classList.remove('hidden');
+                        gsap.to(cert, { scale: 1, opacity: 1, duration: 1, ease: "back.out(1.7)" });
+                        toggleHeartMode(true); // Auto trigger heart mode
+                    }, 500);
+
+                }, SCAN_TIME);
+            };
+
+            const endScan = () => {
+                if(isDone) return;
+                isHeld = false;
+                clearTimeout(holdTimer);
+                scannerBtn.classList.remove('active');
+                scanStatus.innerText = "ACCESS DENIED: PLEASE HOLD LONGER";
+                scanStatus.style.color = "#ef4444"; // Red
+                setTimeout(() => {
+                    if(!isHeld && !isDone) {
+                        scanStatus.innerText = "PLACE THUMB TO SCAN";
+                        scanStatus.style.color = "#22d3ee";
+                    }
+                }, 1500);
+            };
+
+            // Touch & Mouse Events
+            scannerBtn.addEventListener('mousedown', startScan);
+            scannerBtn.addEventListener('touchstart', startScan);
+            
+            window.addEventListener('mouseup', endScan);
+            window.addEventListener('touchend', endScan);
+
+
+            // --- 7. WARP SPEED LOGIC (ADDED BACK) ---
+            const warpBtn = document.getElementById('warp-btn');
+            const warpMessage = document.getElementById('warp-message');
+            
+            warpBtn.addEventListener('click', () => {
+                // 1. Hide Button
+                gsap.to(warpBtn, { scale: 0, duration: 0.5, ease: "back.in" });
+                
+                // 2. Accelerate Stars
+                const tl = gsap.timeline();
+                tl.to({ val: 0 }, {
+                    val: 50,
+                    duration: 2,
+                    ease: "power2.in",
+                    onUpdate: function() {
+                        warpSpeed = this.targets()[0].val;
+                    }
+                })
+                // 3. Flash Colorful (DEEP EFFECT)
+                .to("body", { backgroundColor: "#fae8ff", duration: 0.15, yoyo: true, repeat: 1 }) // Pinkish flash
+                // 4. Slow down & Reveal Message
+                .to({ val: 50 }, {
+                    val: 2, // keep moving slightly
+                    duration: 2,
+                    ease: "power2.out",
+                    onUpdate: function() {
+                        warpSpeed = this.targets()[0].val;
+                    },
+                    onComplete: function() {
+                        // DEEP THINK: Automatically transition to Heart Mode after warp
+                        if(!isFormingHeart) toggleHeartMode(true);
+                    }
+                })
+                .to(warpMessage, { 
+                    display: "block", 
+                    opacity: 1, 
+                    y: 0, 
+                    duration: 1, 
+                    ease: "power2.out" 
+                }, "-=1.5");
+            });
+
+
+            // --- 8. INTRO & SCROLL ANIMATION SEQUENCE ---
+            const envelopeTrigger = document.getElementById('envelope-trigger');
+            const openBtn = document.getElementById('open-btn');
+            const introLayer = document.getElementById('intro-layer');
+            const appContent = document.getElementById('app-content');
+            
+            let isOpening = false;
+
+            const startExperience = () => {
+                if(isOpening) return;
+                isOpening = true;
+
+                // Play Music on interaction
+                if(!isPlaying) {
+                    audio.play().then(() => {
+                        isPlaying = true;
+                        musicBtn.innerHTML = '<span class="text-pink-400">||</span> <span class="text-pink-400">Pause Music</span>';
+                    }).catch(e => console.log("Audio play failed", e));
+                }
+
+                gsap.to(openBtn, { opacity: 0, duration: 0.3, pointerEvents: "none" });
+                gsap.to(".text-red-100\\/60", { opacity: 0, duration: 0.3 });
+
+                const tl = gsap.timeline();
+                
+                tl.to("#flap", { rotateX: 180, duration: 0.8, ease: "power2.inOut" })
+                .to("#seal", { opacity: 0, scale: 0.5, duration: 0.4 }, "-=0.4")
+                .to("#letter-preview", { y: -40, duration: 0.5, ease: "back.out(1.7)" })
+                .to(".envelope", { scale: 50, rotate: 10, duration: 1.5, ease: "power3.in" }, "+=0.1")
+                .to(introLayer, { opacity: 0, duration: 0.5, onComplete: () => introLayer.style.display = 'none' })
+                .set(appContent, { display: 'block', opacity: 1 })
+                .fromTo(".reveal-text span", 
+                    { y: "100%", opacity: 0 },
+                    { y: "0%", opacity: 1, duration: 1.2, stagger: 0.1, ease: "power4.out" }
+                );
+                
+                setTimeout(initScrollAnimations, 1000);
+            };
+
+            envelopeTrigger.addEventListener('click', startExperience);
+            openBtn.addEventListener('click', startExperience);
+            envelopeTrigger.addEventListener('touchstart', startExperience, {passive: true});
+
+            function initScrollAnimations() {
+                gsap.utils.toArray('.gs-reveal').forEach(elem => {
+                    gsap.from(elem, {
+                        scrollTrigger: { trigger: elem, start: "top 85%" },
+                        y: 50, opacity: 0, duration: 1.2, ease: "power3.out"
+                    });
+                });
+
+                gsap.utils.toArray('.timeline-item').forEach((elem, i) => {
+                    gsap.from(elem, {
+                        scrollTrigger: { trigger: elem, start: "top 90%" },
+                        x: -30, opacity: 0, duration: 1, delay: i * 0.2, ease: "power3.out"
+                    });
+                });
+
+                gsap.to(".parallax-bg", {
+                    scrollTrigger: { trigger: "body", start: "top top", end: "bottom bottom", scrub: 1 },
+                    y: 300
+                });
+            }
+
+            // --- 9. AI GENERATOR LOGIC ---
+            const aiButtons = document.querySelectorAll('.ai-trigger');
+            const aiOutput = document.getElementById('ai-output');
+            const aiLoader = document.getElementById('ai-loader');
+
+            aiButtons.forEach(btn => {
+                btn.addEventListener('click', async () => {
+                    const mood = btn.dataset.mood;
+                    aiOutput.classList.add('hidden');
+                    aiLoader.classList.remove('hidden');
+                    
+                    let prompt = "";
+                    if(mood === "Future Letter") {
+                        prompt = "Write a very short, romantic fictional letter from the future (New Year 2027) to Priti. Say how 2026 was the best year for us. Max 40 words. Please use separate lines for readability.";
+                    } else if (mood === "Funny Resolution") {
+                        prompt = "Write a funny and cute New Year's resolution a boyfriend makes to his girlfriend named Priti for 2026. Keep it short, witty, and under 30 words. Please use separate lines.";
+                    } else if (mood === "Cosmic Compliment") {
+                        prompt = "Write a deep, cosmic, space-themed romantic compliment for Priti. Compare her to stars or the universe. 1-2 sentences. Please use separate lines.";
+                    } else if (mood === "Love Forecast") {
+                        prompt = "Write a short, horoscope-style romantic forecast for 'Us' in 2026. Predict a specific cute moment. Max 30 words.";
+                    } else if (mood === "Emoji Message") {
+                        prompt = "Write a short romantic message for Priti using ONLY emojis. Tell a story about love and the future with about 10-15 emojis.";
+                    } else {
+                        prompt = "Write a 4-line romantic poem for Priti for New Year 2026. Make it sweet and magical. Please use separate lines.";
+                    }
+
+                    try {
+                        const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-09-2025:generateContent?key=${apiKey}`, {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify({ contents: [{ parts: [{ text: prompt }] }] })
+                        });
+
+                        const data = await response.json();
+                        const text = data.candidates[0].content.parts[0].text.replace(/\*\*/g, ""); 
+
+                        aiLoader.classList.add('hidden');
+                        aiOutput.classList.remove('hidden');
+                        
+                        aiOutput.innerHTML = "";
+                        let i = 0;
+                        const typeInterval = setInterval(() => {
+                            aiOutput.innerHTML += text.charAt(i);
+                            i++;
+                            if (i > text.length - 1) clearInterval(typeInterval);
+                        }, 30);
+
+                    } catch (e) {
+                        aiLoader.classList.add('hidden');
+                        aiOutput.classList.remove('hidden');
+                        aiOutput.innerHTML = "Cupid is offline. But I love you anyway! ❤️";
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>
