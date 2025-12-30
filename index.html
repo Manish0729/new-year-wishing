@@ -955,7 +955,9 @@
                         });
 
                         if (!response.ok) {
-                            throw new Error('API request failed');
+                            const errorText = await response.text();
+                            console.error('API Response Error:', response.status, errorText);
+                            throw new Error(`API request failed: ${response.status} - ${errorText}`);
                         }
 
                         const data = await response.json();
@@ -975,7 +977,8 @@
                     } catch (e) {
                         aiLoader.classList.add('hidden');
                         aiOutput.classList.remove('hidden');
-                        aiOutput.innerHTML = "Cupid is offline. But I love you anyway! ❤️";
+                        console.error('API Error:', e);
+                        aiOutput.innerHTML = "Cupid is offline. But I love you anyway! ❤️<br><small style='opacity:0.5'>Error: " + e.message + "</small>";
                     }
                 });
             });

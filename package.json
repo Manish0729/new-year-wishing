@@ -1,0 +1,23 @@
+{
+  "name": "new-year-wishing",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Manish0729/new-year-wishing.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Manish0729/new-year-wishing/issues"
+  },
+  "homepage": "https://github.com/Manish0729/new-year-wishing#readme",
+  "description": "",
+  "devDependencies": {
+    "vercel": "^50.1.3"
+  }
+}
